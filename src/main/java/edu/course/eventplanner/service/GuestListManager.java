@@ -27,6 +27,7 @@ public class GuestListManager {
         size++;
     }
 
+    // I am removing and identifying guests based off their name and tag combo
     public boolean removeGuest(String identifier) {
         Guest toRemove = findGuest(identifier);
 
