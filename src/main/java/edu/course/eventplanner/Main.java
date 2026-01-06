@@ -42,7 +42,7 @@ public class Main {
                     String groupTag = input.nextLine();
                     Guest guest = new Guest(name,groupTag);
                     guestListManager.addGuest(guest);
-                    System.out.println(name+ " was successfully added");
+                    System.out.println(name+ " with GroupTag: "+groupTag+" was successfully added");
                     break;
                 case 3:
                     input.nextLine();
@@ -89,7 +89,7 @@ public class Main {
                         for (Integer tableNum : chart.keySet()) {
                             System.out.print("Table " + tableNum + ": ");
                             for (Guest z : chart.get(tableNum)) {
-                                System.out.print( "Name: "+ z.getName() + "Group Tag: " + z.getGroupTag()+ " | ");
+                                System.out.print( "Name: "+ z.getName() + "GroupTag: " + z.getGroupTag()+ " | ");
                             }
                             System.out.println();
                         }
@@ -129,14 +129,13 @@ public class Main {
                     System.out.println("Pending Tasks: " + taskManager.remainingTaskCount());
                     System.out.println("All Guests: ");
                     for(Guest w : guestListManager.getAllGuests()) {
-                        System.out.println("Name: " + w.getName() + " | Group Tag: " + w.getGroupTag());
+                        System.out.println("Name: " + w.getName() + " | GroupTag: " + w.getGroupTag());
                     }
                     break;
 
             }
             menu();
             choice= input.nextInt();
-            input.nextLine();
         }
 
         System.out.println("Happy Planning! Have a great day!");
