@@ -1,11 +1,16 @@
 package edu.course.eventplanner.service;
 
-import edu.course.eventplanner.model.*;
+import edu.course.eventplanner.model.Guest;
+import edu.course.eventplanner.model.Venue;
+
 import java.util.*;
 
-public class SeatingPlanner {
+public class SeatingPlannerCopy {
     private final Venue venue;
-    public SeatingPlanner(Venue venue) { this.venue = venue; }
+
+    public SeatingPlannerCopy(Venue venue) {
+        this.venue = venue;
+    }
 
     public static Map<String, List<Guest>> placeGuestsInTagGroup(List<Guest> guests){
         Map<String, List<Guest>> guestsWithTags = new HashMap<>(Map.of());
@@ -61,4 +66,5 @@ public class SeatingPlanner {
         }
         return seatingLayout;
     }
+
 }
