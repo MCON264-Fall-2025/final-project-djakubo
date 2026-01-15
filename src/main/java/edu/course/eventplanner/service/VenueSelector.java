@@ -1,6 +1,8 @@
 package edu.course.eventplanner.service;
 
 import edu.course.eventplanner.model.Venue;
+
+import javax.swing.*;
 import java.util.*;
 
 public class VenueSelector {
@@ -17,7 +19,7 @@ public class VenueSelector {
 
         //if the budget is below the cost of the cheapest venue
         if(budget<sortedVenues.firstKey()){
-            System.out.println("No venue found for this budget");
+            JOptionPane.showMessageDialog(null, "No venue found for this budget");
             return null;
         }
 
@@ -35,8 +37,8 @@ public class VenueSelector {
         }
 
         //if no venue was found
-        if(!guestCountFound){System.out.println("No capacity found for this guest count");}
-        else{System.out.println("No capacity found for this guest count at this budget");}
+        if(!guestCountFound){JOptionPane.showMessageDialog(null, "No capacity found for this guest count");}
+        else{JOptionPane.showMessageDialog(null, "No capacity found for this guest count at this budget");}
         return null;
     }
 }
