@@ -2,7 +2,6 @@ package edu.course.eventplanner.service;
 
 import edu.course.eventplanner.model.*;
 
-import javax.swing.text.html.HTML;
 import java.util.*;
 
 public class SeatingPlanner {
