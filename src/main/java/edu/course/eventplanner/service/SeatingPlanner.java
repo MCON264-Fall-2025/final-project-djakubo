@@ -1,6 +1,8 @@
 package edu.course.eventplanner.service;
 
 import edu.course.eventplanner.model.*;
+
+import javax.swing.text.html.HTML;
 import java.util.*;
 
 public class SeatingPlanner {
@@ -21,6 +23,17 @@ public class SeatingPlanner {
         }
         return guestsWithTags;
     }
+    public static String determineMaxGroupTag(Map<String, List<Guest>> guestsWithTags){
+        int maxSize = 0;
+        String maxTag = "";
+        for(String tag: guestsWithTags.keySet()){
+            if(guestsWithTags.get(tag).size()>maxSize){
+                maxSize = guestsWithTags.get(tag).size();
+                maxTag = tag;
+            }
+        }
+        return maxTag;
+    }
 
     public Map<Integer, List<Guest>> generateSeating(List<Guest> guests) {
         TreeMap<Integer, List<Guest>> seatingLayout = new TreeMap<>();
@@ -29,35 +42,45 @@ public class SeatingPlanner {
         int tableNum = 0;
         int tableSize = venue.getSeatsPerTable();
 
-        //place every guest at a table
-        for(String tag: guestsWithTags.keySet()){
+        while(!guestsWithTags.isEmpty()) {
 
-            List<Guest> tagGroup = guestsWithTags.get(tag);
-            while(!tagGroup.isEmpty()){
+            //get tag group with the most guests
+            String maxGroupTag = determineMaxGroupTag(guestsWithTags);
+            List<Guest> tagGroup = guestsWithTags.get(maxGroupTag);
 
-                if(!seatingLayout.containsKey(tableNum)){
-                    seatingLayout.put(tableNum, new ArrayList<>());
-                }
-                //if the size of the tag group is less than the table size
-                if(tagGroup.size()<=tableSize){
-                    tableSize = tagGroup.size();
-                }
-
-                //places table size number of guests in a table
-                seatingLayout.get(tableNum).addAll(tagGroup.subList(0, tableSize));
-
-                //removes those guests from the tag group
-                tagGroup.subList(0, tableSize).clear();
-
-                //if the table was filled
-                if(seatingLayout.get(tableNum).size() == venue.getSeatsPerTable()){
-                    tableNum++;
-                    tableSize = venue.getSeatsPerTable();
-                }
-                else{
-                    tableSize = venue.getSeatsPerTable()-seatingLayout.get(tableNum).size();
-                }
+            //Initiate table number
+            if (!seatingLayout.containsKey(tableNum)) {
+                seatingLayout.put(tableNum, new ArrayList<>());
             }
+            //if all tables have been filled, find the table with the most remaining seats
+            else{
+                for (int i = 0; i < venue.getTables(); i++) {
+                    if (seatingLayout.get(i).size() < venue.getSeatsPerTable()
+                            && seatingLayout.get(i).size() > seatingLayout.get(tableNum).size()) {
+                        tableNum = i;
+                    }
+                }
+                tableSize = venue.getSeatsPerTable() - seatingLayout.get(tableNum).size();
+            }
+
+            //if the size of the tag group is less than the table size
+            if (tagGroup.size() <= tableSize) {
+                tableSize = tagGroup.size();
+            }
+
+            //place table size number of guests in a table
+            seatingLayout.get(tableNum).addAll(tagGroup.subList(0, tableSize));
+
+            //removes those guests from the tag group
+            tagGroup.subList(0, tableSize).clear();
+
+            if (tagGroup.isEmpty()) {guestsWithTags.remove(maxGroupTag);}
+
+            if(tableNum < venue.getTables()-1){
+                tableNum++;
+                tableSize = venue.getSeatsPerTable();
+            }
+            else{tableNum = 0;}
         }
         return seatingLayout;
     }

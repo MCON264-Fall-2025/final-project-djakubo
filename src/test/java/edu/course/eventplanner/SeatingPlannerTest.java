@@ -28,7 +28,7 @@ public class SeatingPlannerTest {
     void testSeatingPlanner(){
         SeatingPlanner seatingPlanner = new SeatingPlanner(venue);
         seatingPlanner.generateSeating(guests);
-        //System.out.println(guests.toString());
+        System.out.println(guests.toString());
         System.out.println(seatingPlanner.generateSeating(guests).toString());
     }
 }
