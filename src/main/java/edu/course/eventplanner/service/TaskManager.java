@@ -7,7 +7,18 @@ public class TaskManager {
     private final Queue<Task> upcoming = new LinkedList<>();
     private final Stack<Task> completed = new Stack<>();
 
-
+    public Task getUpcoming(){
+        if(upcoming.isEmpty()){
+            return null;
+        }
+        return upcoming.peek();
+    }
+    public Task getCompleted(){
+        if(completed.isEmpty()){
+            return null;
+        }
+        return completed.peek();
+    }
     public void addTask(Task task) {
         upcoming.add(task);
     }
@@ -15,8 +26,8 @@ public class TaskManager {
         if(upcoming.isEmpty()){
             return null;
         }
-        completed.push(upcoming.poll());
-        return upcoming.remove();
+        completed.push(upcoming.peek());
+        return upcoming.poll();
     }
     public Task undoLastTask() {
         if(completed.isEmpty()){
