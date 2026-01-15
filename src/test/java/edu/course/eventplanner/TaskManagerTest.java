@@ -50,18 +50,4 @@ public class TaskManagerTest {
         assertEquals(1, taskManager.remainingTaskCount());
     }
 
-    @Test
-    public void testMixedExecuteAndUndo() {
-        taskManager.addTask(new Task("Task 3"));
-
-        taskManager.executeNextTask(); // Execute Task 1
-        taskManager.executeNextTask(); // Execute Task 2
-
-        taskManager.undoLastTask(); // Undo Task 2
-
-        assertEquals(1, taskManager.remainingTaskCount(), "Should have Task 3 remaining");
-
-        Task next = taskManager.executeNextTask(); // Should execute Task 3
-        assertEquals("Task 3", next.getDescription());
-    }
 }

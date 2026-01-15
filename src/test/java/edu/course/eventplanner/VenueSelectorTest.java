@@ -58,5 +58,4 @@ public class VenueSelectorTest {
         assertNull(venueSelector.selectVenue(budget, guestCount));
     }
 
-
 }

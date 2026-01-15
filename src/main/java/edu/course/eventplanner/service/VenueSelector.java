@@ -12,6 +12,10 @@ public class VenueSelector {
 
     public Venue selectVenue(double budget, int guestCount) {
 
+        //if empty list
+        if(sortedVenues.isEmpty()){
+            return null;
+        }
         //sort venues
         for(int i =0; i < venues.size(); i++){
             sortedVenues.put(venues.get(i).getCost(),i);
