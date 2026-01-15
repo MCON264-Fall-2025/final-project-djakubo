@@ -30,7 +30,7 @@ public class GuestListManager {
             return guestByName.get(guestName);
         }
         else{
-            throw new NoSuchElementException();
+            return null;
         }
     }
     public int getGuestCount() { return guests.size(); }
