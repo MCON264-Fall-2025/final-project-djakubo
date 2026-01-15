@@ -4,7 +4,6 @@ import edu.course.eventplanner.model.Venue;
 import edu.course.eventplanner.service.VenueSelector;
 import edu.course.eventplanner.util.Generators;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,5 +56,4 @@ public class VenueSelectorTest {
         guestCount = 770;
         assertNull(venueSelector.selectVenue(budget, guestCount));
     }
-
 }

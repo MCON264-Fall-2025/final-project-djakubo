@@ -37,7 +37,7 @@ public class GuestListManagerTest {
     }
     @Test
     void test_find_nonexisting_guest(){
-        assertThrows(NoSuchElementException.class, () -> guestList.findGuest("Bruchele"));
+        assertNull(guestList.findGuest("Bruchele"));
     }
 
     @Test
