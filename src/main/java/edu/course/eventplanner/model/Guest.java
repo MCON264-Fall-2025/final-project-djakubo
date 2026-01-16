@@ -9,4 +9,9 @@ public class Guest {
     }
     public String getName() { return name; }
     public String getGroupTag() { return groupTag; }
+    @Override
+    public String toString() {
+        return name + " (" + groupTag + ")";
+    }
+
 }
