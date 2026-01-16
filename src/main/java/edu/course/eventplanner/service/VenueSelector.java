@@ -45,7 +45,7 @@ public class VenueSelector {
         //if no venue was found
         if(!guestCountFound){
             if (!Boolean.getBoolean("test.mode")) {
-                JOptionPane.showMessageDialog(null, "No capacity found");
+                JOptionPane.showMessageDialog(null, "No venue found for this capacity");
             }
         }
         else{

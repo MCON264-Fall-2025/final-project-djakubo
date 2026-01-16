@@ -12,7 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests filtering, selection rules, and algorithmic approach
  */
 public class VenueSelectionTest {
-
+    @BeforeAll
+    static void setTestModeTrue(){
+        System.setProperty("test.mode", "true");
+    }
     @Test
     public void testSelectVenueWithinBudgetAndCapacity() {
         List<Venue> venues = Arrays.asList(
