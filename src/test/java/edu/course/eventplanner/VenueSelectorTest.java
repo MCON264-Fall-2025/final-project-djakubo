@@ -3,6 +3,7 @@ package edu.course.eventplanner;
 import edu.course.eventplanner.model.Venue;
 import edu.course.eventplanner.service.VenueSelector;
 import edu.course.eventplanner.util.Generators;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
@@ -14,7 +15,10 @@ public class VenueSelectorTest {
     int guestCount;
     int budget;
 
-
+    @BeforeAll
+    static void setTestModeTrue(){
+        System.setProperty("test.mode", "true");
+    }
     @Test
     void testSelectOnlyOptionBasedOnBudget(){
         budget = 6000;

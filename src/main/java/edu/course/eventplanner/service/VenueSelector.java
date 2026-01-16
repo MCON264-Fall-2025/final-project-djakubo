@@ -23,7 +23,9 @@ public class VenueSelector {
 
         //if the budget is below the cost of the cheapest venue
         if(budget<sortedVenues.firstKey()){
-            //JOptionPane.showMessageDialog(null, "No venue found for this budget");
+            if (!Boolean.getBoolean("test.mode")) {
+                JOptionPane.showMessageDialog(null, "No venue found for this budget");
+            }
             return null;
         }
 
@@ -41,8 +43,15 @@ public class VenueSelector {
         }
 
         //if no venue was found
-        //if(!guestCountFound){JOptionPane.showMessageDialog(null, "No capacity found for this guest count");}
-        //else{JOptionPane.showMessageDialog(null, "No capacity found for this guest count at this budget");}
+        if(!guestCountFound){
+            if (!Boolean.getBoolean("test.mode")) {
+                JOptionPane.showMessageDialog(null, "No capacity found");
+            }
+        }
+        else{
+            if (!Boolean.getBoolean("test.mode")) {
+                JOptionPane.showMessageDialog(null, "No capacity found for this guest count at this budget");
+        }}
         return null;
     }
 }

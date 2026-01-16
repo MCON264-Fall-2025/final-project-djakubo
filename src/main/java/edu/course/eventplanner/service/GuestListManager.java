@@ -26,7 +26,7 @@ public class GuestListManager {
         }
     }
     public Guest findGuest(String guestName) {
-        if(guests.contains(guestByName.get(guestName))){
+        if(guestByName.containsKey(guestName)){
             return guestByName.get(guestName);
         }
         else{
