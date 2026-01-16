@@ -23,6 +23,7 @@ public class TaskManagerTest {
     @Test
     void testAddTask(){
         assertEquals(task1, taskManager.getUpcoming());
+        assertEquals(task1.getDescription(), taskManager.getUpcoming().getDescription() );
     }
 
     @Test
