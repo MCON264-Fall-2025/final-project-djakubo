@@ -15,10 +15,6 @@ public class VenueSelectorTest {
     int guestCount;
     int budget;
 
-    @BeforeAll
-    static void setTestModeTrue(){
-        System.setProperty("test.mode", "true");
-    }
     @Test
     void testSelectOnlyOptionBasedOnBudget(){
         budget = 6000;

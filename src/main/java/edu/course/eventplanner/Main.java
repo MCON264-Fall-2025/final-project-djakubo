@@ -9,19 +9,19 @@ import edu.course.eventplanner.service.TaskManager;
 import edu.course.eventplanner.service.VenueSelector;
 import edu.course.eventplanner.util.Generators;
 
-import javax.swing.*;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
 
         GuestListManager guestListManager = new GuestListManager();
         TaskManager taskManager = new TaskManager();
-        SeatingPlanner seatingPlanner;
         VenueSelector venueSelector = new VenueSelector(Generators.generateVenues());
         Venue venue = null;
-        List<Guest> guests;
-
 
         int choice = 1;
         String menu =
@@ -35,154 +35,173 @@ public class Main {
                         "8. Undo last task\n" +
                         "9. Print event summary\n" +
                         "0. Exit";
-        while (choice != 0) {
-            String input = JOptionPane.showInputDialog(
-                    null,
-                    menu,
-                    "Event Planner Menu",
-                    JOptionPane.PLAIN_MESSAGE
-            );
 
-            if (input == null) {
-                // User hit cancel → treat as exit
-                break;
-            }
+        while (choice != 0) {
+            System.out.println("\nEvent Planner Menu");
+            System.out.println(menu);
+            System.out.print("Enter choice: ");
 
             try {
-                choice = Integer.parseInt(input);
+                choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Please enter a number.");
+                System.out.println("Please enter a number.");
                 continue;
             }
 
             switch (choice) {
-                case 1:
-                    guests = Generators.GenerateGuests(100);
-                    venue = venueSelector.selectVenue(10000, 100);
-                    seatingPlanner = new SeatingPlanner(venue);
-                    String seatingChart = seatingPlanner.generateSeating(guests).toString().replace("],", "]\n");
-                    JOptionPane.showMessageDialog(null, "Budget: $10,000\nGuestCount: 100\nVenue: " +
-                            venue.getName() + "\nSeating Chart: \n" + seatingChart);
-                    break;
-
-                case 2:
-                    String name = JOptionPane.showInputDialog(null, "Enter guest name:");
-                    if (name == null) {
-                        JOptionPane.showMessageDialog(null, "Guest name cannot be empty.");
-                        break;
-                    }
-                    String groupTag = JOptionPane.showInputDialog(null, "Enter guest group tag:");
-                    if (groupTag == null) {
-                        JOptionPane.showMessageDialog(null, "Group tag cannot be empty.");
-                        break;
-                    }
-
-                    Guest guest = new Guest(name, groupTag);
-                    guestListManager.addGuest(guest);
-                    JOptionPane.showMessageDialog(null, guest.getName() + " has been added to the guest list");
-                    break;
-
-                case 3:
-                    name = JOptionPane.showInputDialog(null, "Enter guest name to remove:");
-                    if(!guestListManager.removeGuest(name)){
-                        JOptionPane.showMessageDialog(null, "No such guest found");
-                        break;
-                    }
-                    JOptionPane.showMessageDialog(null, name + " was removed" );
-                    break;
-
-                case 4:
-                    //Get budget and guest count from user
-                    double budget = 0;
-                    int guestCount = 0;
-
-                    //find valid venue
-                    while (true) {
-                        try {
-                            String budgetInput = JOptionPane.showInputDialog("Enter your budget: ");
-                            if (budgetInput == null) return;
-                            String guestInput = JOptionPane.showInputDialog("Enter number of guests: ");
-                            if (guestInput == null) return;
-
-                            budget = Double.parseDouble(budgetInput);
-                            guestCount = Integer.parseInt(guestInput);
-
-                            if (venueSelector.selectVenue(budget, guestCount) == null) {
-                                continue;
-                            }
-                            break;
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Invalid input. Please enter numbers only.");
-                        }
-                    }
-
-                    venue = venueSelector.selectVenue(budget, guestCount);
-                    JOptionPane.showMessageDialog(null, "Venue: " + venue.getName());
-                    break;
-
-                case 5:
-                    if (venue == null) {
-                        JOptionPane.showMessageDialog(null, "Select venue first");
-                        break;
-                    }
-                    if(guestListManager.getAllGuests().isEmpty()){
-                        JOptionPane.showMessageDialog(null, "Add guests first");
-                        break;
-                    }
-                    seatingPlanner = new SeatingPlanner(venue);
-                    String chart = seatingPlanner.generateSeating(guestListManager.getAllGuests()).toString().replace("],", "]\n");
-                    JOptionPane.showMessageDialog(null,  "Seating Chart: \n" + chart);
-                    break;
-
-                case 6:
-                    String taskInput = JOptionPane.showInputDialog("Enter task");
-                    Task task = new Task(taskInput);
-                    taskManager.addTask(task);
-                    JOptionPane.showMessageDialog(null, task.getDescription() + " has been added to the task list");
-                    break;
-
-                case 7:
-                    if(taskManager.remainingTaskCount()==0){
-                        JOptionPane.showMessageDialog(null, "No tasks to be completed");
-                        break;
-                    }
-                    taskManager.executeNextTask();
-                    JOptionPane.showMessageDialog(null, taskManager.getCompleted().getDescription() + " was executed");
-                    break;
-
-                case 8:
-                    if(taskManager.getCompleted() == null){
-                        JOptionPane.showMessageDialog(null, "No task was completed");
-                        break;
-                    }
-                    JOptionPane.showMessageDialog(null, taskManager.undoLastTask().getDescription() + " was undone");
-                    break;
-
-                case 9:
-                    if (venue == null) {
-                        JOptionPane.showMessageDialog(null, "Select venue first");
-                        break;
-                    }
-                    if(guestListManager.getAllGuests().isEmpty()){
-                        JOptionPane.showMessageDialog(null, "Add guests first");
-                        break;
-                    }
-                    seatingPlanner = new SeatingPlanner(venue);
-                    String sChart = seatingPlanner.generateSeating(guestListManager.getAllGuests()).toString().replace("],", "]\n");
-                    JOptionPane.showMessageDialog(null, "Guests: " + guestListManager.getAllGuests().toString()+"\nVenue: " + venue.getName()
-                            + "\nTasks remaining: " +taskManager.remainingTaskCount()+ "\nNext task: " + taskManager.getUpcoming().getDescription() +
-                            "\nSeating Chart: \n" + sChart);
-                    break;
-
-                case 0:
-                    JOptionPane.showMessageDialog(null, "Goodbye!");
-                    break;
-
-                default:
-                    JOptionPane.showMessageDialog(null, "Invalid choice.");
+                case 1 -> venue = loadSampleData(venueSelector);
+                case 2 -> addGuest(scanner, guestListManager);
+                case 3 -> removeGuest(scanner, guestListManager);
+                case 4 -> venue = selectVenue(scanner, venueSelector);
+                case 5 -> generateSeatingChart(venue, guestListManager);
+                case 6 -> addTask(scanner, taskManager);
+                case 7 -> executeNextTask(taskManager);
+                case 8 -> undoLastTask(taskManager);
+                case 9 -> printEventSummary(venue, guestListManager, taskManager);
+                case 0 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice.");
             }
         }
+
+        scanner.close();
         System.exit(0);
     }
 
+    /* ---------------- HELPER METHODS ---------------- */
+
+    static Venue loadSampleData(VenueSelector venueSelector) {
+        List<Guest> guests = Generators.GenerateGuests(100);
+        Venue venue = venueSelector.selectVenue(10000, 100);
+        SeatingPlanner seatingPlanner = new SeatingPlanner(venue);
+
+        String seatingChart = seatingPlanner.generateSeating(guests)
+                .toString().replace("],", "]\n");
+
+        System.out.println("Budget: $10,000");
+        System.out.println("GuestCount: 100");
+        System.out.println("Venue: " + venue.getName());
+        System.out.println("Seating Chart:\n" + seatingChart);
+
+        return venue;
+    }
+
+    static void addGuest(Scanner scanner, GuestListManager manager) {
+        System.out.print("Enter guest name: ");
+        String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println("Guest name cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter guest group tag: ");
+        String groupTag = scanner.nextLine();
+        if (groupTag.isEmpty()) {
+            System.out.println("Group tag cannot be empty.");
+            return;
+        }
+
+        manager.addGuest(new Guest(name, groupTag));
+        System.out.println(name + " has been added to the guest list");
+    }
+
+    static void removeGuest(Scanner scanner, GuestListManager manager) {
+        System.out.print("Enter guest name to remove: ");
+        String name = scanner.nextLine();
+
+        if (!manager.removeGuest(name)) {
+            System.out.println("No such guest found");
+        } else {
+            System.out.println(name + " was removed");
+        }
+    }
+
+    static Venue selectVenue(Scanner scanner, VenueSelector selector) {
+        while (true) {
+            try {
+                System.out.print("Enter your budget: ");
+                double budget = Double.parseDouble(scanner.nextLine());
+
+                System.out.print("Enter number of guests: ");
+                int guestCount = Integer.parseInt(scanner.nextLine());
+
+                Venue venue = selector.selectVenue(budget, guestCount);
+                if (venue == null) {
+                    System.out.println("No venue fits that budget and guest count.");
+                    continue;
+                }
+
+                System.out.println("Venue: " + venue.getName());
+                return venue;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers only.");
+            }
+        }
+    }
+
+    static void generateSeatingChart(Venue venue, GuestListManager manager) {
+        if (venue == null) {
+            System.out.println("Select venue first");
+            return;
+        }
+        if (manager.getAllGuests().isEmpty()) {
+            System.out.println("Add guests first");
+            return;
+        }
+
+        SeatingPlanner planner = new SeatingPlanner(venue);
+        String chart = planner.generateSeating(manager.getAllGuests())
+                .toString().replace("],", "]\n");
+
+        System.out.println("Seating Chart:\n" + chart);
+    }
+
+    static void addTask(Scanner scanner, TaskManager manager) {
+        System.out.print("Enter task: ");
+        Task task = new Task(scanner.nextLine());
+        manager.addTask(task);
+        System.out.println(task.getDescription() + " has been added to the task list");
+    }
+
+    static void executeNextTask(TaskManager manager) {
+        if (manager.remainingTaskCount() == 0) {
+            System.out.println("No tasks to be completed");
+            return;
+        }
+
+        manager.executeNextTask();
+        System.out.println(manager.getCompleted().getDescription() + " was executed");
+    }
+
+    static void undoLastTask(TaskManager manager) {
+        if (manager.getCompleted() == null) {
+            System.out.println("No task was completed");
+            return;
+        }
+
+        System.out.println(manager.undoLastTask().getDescription() + " was undone");
+    }
+
+    static void printEventSummary(Venue venue, GuestListManager guests, TaskManager tasks) {
+        if (venue == null) {
+            System.out.println("Select venue first");
+            return;
+        }
+        if (guests.getAllGuests().isEmpty()) {
+            System.out.println("Add guests first");
+            return;
+        }
+
+        SeatingPlanner planner = new SeatingPlanner(venue);
+        String chart = planner.generateSeating(guests.getAllGuests())
+                .toString().replace("],", "]\n");
+
+        System.out.println("Guests: " + guests.getAllGuests());
+        System.out.println("Venue: " + venue.getName());
+        System.out.println("Tasks remaining: " + tasks.remainingTaskCount());
+        if (tasks.getUpcoming() != null) {
+            System.out.println("Next task: " + tasks.getUpcoming().getDescription());
+        }
+        System.out.println("Seating Chart:\n" + chart);
+    }
 }
