@@ -1,6 +1,8 @@
 package edu.course.eventplanner;
 
+import edu.course.eventplanner.model.Guest;
 import edu.course.eventplanner.model.Task;
+import edu.course.eventplanner.model.Venue;
 import edu.course.eventplanner.service.GuestListManager;
 import edu.course.eventplanner.service.TaskManager;
 import edu.course.eventplanner.service.VenueSelector;
@@ -71,4 +73,48 @@ class MainTest {
 
         assertEquals(1, manager.remainingTaskCount());
     }
+
+    @Test
+    void selectVenueReturnsValidVenue() {
+        VenueSelector selector = new VenueSelector(Generators.generateVenues());
+        Scanner scanner = new Scanner(
+                new ByteArrayInputStream("10000\n50\n".getBytes())
+        );
+
+        Venue venue = Main.selectVenue(scanner, selector);
+
+        assertNotNull(venue);
+    }
+
+    @Test
+    void generateSeatingChartRunsWithValidData() {
+        GuestListManager guestManager = new GuestListManager();
+        guestManager.addGuest(new Guest("A", "G"));
+        guestManager.addGuest(new Guest("B", "G"));
+
+        Venue venue = new Venue("Hall", 1000, 10, 5, 2);
+
+        // method returns void — test that it does NOT throw
+        assertDoesNotThrow(() ->
+                Main.generateSeatingChart(venue, guestManager)
+        );
+    }
+
+    @Test
+    void printEventSummaryRunsWithValidData() {
+        GuestListManager guestManager = new GuestListManager();
+        guestManager.addGuest(new Guest("A", "G"));
+
+        TaskManager taskManager = new TaskManager();
+        taskManager.addTask(new edu.course.eventplanner.model.Task("Setup"));
+
+        Venue venue = new Venue("Hall", 1000, 10, 5, 2);
+
+        assertDoesNotThrow(() ->
+                Main.printEventSummary(venue, guestManager, taskManager)
+        );
+    }
+
+
+
 }
