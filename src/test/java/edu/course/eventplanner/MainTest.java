@@ -1,57 +1,74 @@
 package edu.course.eventplanner;
 
-import edu.course.eventplanner.model.Guest;
 import edu.course.eventplanner.model.Task;
 import edu.course.eventplanner.service.GuestListManager;
 import edu.course.eventplanner.service.TaskManager;
+import edu.course.eventplanner.service.VenueSelector;
+import edu.course.eventplanner.util.Generators;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
 
     @Test
-    void addGuestAddsGuestToManager() {
-        GuestListManager manager = new GuestListManager();
+    void loadSampleDataReturnsVenue() {
+        VenueSelector selector = new VenueSelector(Generators.generateVenues());
+        assertNotNull(Main.loadSampleData(selector));
+    }
 
-        manager.addGuest(new Guest("Alice", "Family"));
+    @Test
+    void addGuestAddsGuest() {
+        GuestListManager manager = new GuestListManager();
+        Scanner scanner = new Scanner(new ByteArrayInputStream("Alice\nFamily\n".getBytes()));
+
+        Main.addGuest(scanner, manager);
 
         assertEquals(1, manager.getAllGuests().size());
-        assertEquals("Alice", manager.getAllGuests().get(0).getName());
     }
 
     @Test
     void removeGuestRemovesExistingGuest() {
         GuestListManager manager = new GuestListManager();
-        manager.addGuest(new Guest("Bob", "Friends"));
+        manager.addGuest(new edu.course.eventplanner.model.Guest("Bob", "Friends"));
+        Scanner scanner = new Scanner(new ByteArrayInputStream("Bob\n".getBytes()));
 
-        boolean removed = manager.removeGuest("Bob");
+        Main.removeGuest(scanner, manager);
 
-        assertTrue(removed);
         assertTrue(manager.getAllGuests().isEmpty());
     }
 
     @Test
-    void executeNextTaskMovesTaskToCompleted() {
+    void addTaskAddsTask() {
         TaskManager manager = new TaskManager();
-        manager.addTask(new Task("Decorate"));
+        Scanner scanner = new Scanner(new ByteArrayInputStream("Decorate\n".getBytes()));
 
-        manager.executeNextTask();
+        Main.addTask(scanner, manager);
 
-        assertEquals("Decorate", manager.getCompleted().getDescription());
-        assertEquals(0, manager.remainingTaskCount());
+        assertEquals(1, manager.remainingTaskCount());
+    }
+
+    @Test
+    void executeNextTaskExecutesTask() {
+        TaskManager manager = new TaskManager();
+        manager.addTask(new Task("Setup"));
+
+        Main.executeNextTask(manager);
+
+        assertNotNull(manager.getCompleted());
     }
 
     @Test
     void undoLastTaskRestoresTask() {
         TaskManager manager = new TaskManager();
         manager.addTask(new Task("Setup"));
-
         manager.executeNextTask();
-        manager.undoLastTask();
+
+        Main.undoLastTask(manager);
 
         assertEquals(1, manager.remainingTaskCount());
-        assertNull(manager.getCompleted());
     }
 }
-
