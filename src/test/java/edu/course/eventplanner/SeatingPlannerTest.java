@@ -60,4 +60,53 @@ public class SeatingPlannerTest {
         assertTrue(seating.isEmpty());
     }
 
+    @Test
+    void placeGuestsInTagGroupGroupsCorrectly() {
+        List<Guest> guests = List.of(
+                new Guest("A", "Family"),
+                new Guest("B", "Friends"),
+                new Guest("C", "Family")
+        );
+
+        Map<String, List<Guest>> result =
+                SeatingPlanner.placeGuestsInTagGroup(guests);
+
+        assertEquals(2, result.size());
+        assertEquals(2, result.get("Family").size());
+        assertEquals(1, result.get("Friends").size());
+    }
+
+    @Test
+    void placeGuestsInTagGroupWithSingleGroup() {
+        List<Guest> guests = List.of(
+                new Guest("A", "Work"),
+                new Guest("B", "Work")
+        );
+
+        Map<String, List<Guest>> result =
+                SeatingPlanner.placeGuestsInTagGroup(guests);
+
+        assertEquals(1, result.size());
+        assertEquals(2, result.get("Work").size());
+    }
+
+    @Test
+    void determineMaxGroupTagReturnsLargestGroup() {
+        Map<String, List<Guest>> map = Map.of(
+                "Family", List.of(
+                        new Guest("A", "Family"),
+                        new Guest("B", "Family")
+                ),
+                "Friends", List.of(
+                        new Guest("C", "Friends")
+                )
+        );
+
+        String maxTag =
+                SeatingPlanner.determineMaxGroupTag(map);
+
+        assertEquals("Family", maxTag);
+    }
 }
+
+
